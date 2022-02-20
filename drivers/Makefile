@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0+
 
+obj-$(CONFIG_$(SPL_)ADC) += adc/
 obj-$(CONFIG_$(SPL_TPL_)BOOTCOUNT_LIMIT) += bootcount/
 obj-$(CONFIG_$(SPL_TPL_)BUTTON) += button/
 obj-$(CONFIG_$(SPL_TPL_)CACHE) += cache/
