@@ -488,6 +488,11 @@ config SPL_FIT_IMAGE_TINY
 	  ensure this information is available to the next image
 	  invoked).
 
+config SPL_ADC
+	bool "Support ADC drivers in SPL"
+	help
+	  Enable ADC drivers in SPL.
+
 config SPL_CACHE
 	bool "Support CACHE drivers"
 	help
