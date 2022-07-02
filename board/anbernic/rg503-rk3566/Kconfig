@@ -1,0 +1,15 @@
+if TARGET_ANBERNIC_RG503_RK3566
+
+config SYS_BOARD
+	default "rg503-rk3566"
+
+config SYS_VENDOR
+	default "anbernic"
+
+config SYS_CONFIG_NAME
+	default "rg503-rk3566"
+
+config BOARD_SPECIFIC_OPTIONS
+	def_bool y
+
+endif
