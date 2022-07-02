@@ -9,19 +9,30 @@
 #include <asm/armv8/mmu.h>
 #include <asm/io.h>
 #include <asm/arch-rockchip/bootrom.h>
+#include <asm/arch-rockchip/boot_mode.h>
 #include <asm/arch-rockchip/grf_rk3568.h>
 #include <asm/arch-rockchip/hardware.h>
 #include <dt-bindings/clock/rk3568-cru.h>
 
 #define PMUGRF_BASE			0xfdc20000
 #define GRF_BASE			0xfdc60000
+#define GRF_GPIO1B_IOMUX_H		0x0c
+#define GRF_GPIO1C_IOMUX_L		0x10
+#define GRF_GPIO1C_IOMUX_H		0x14
+#define GRF_GPIO1D_IOMUX_L		0x18
+#define GRF_GPIO1D_IOMUX_H		0x1c
+#define GRF_GPIO2A_IOMUX_L		0x20
 #define GRF_GPIO1B_DS_2			0x218
 #define GRF_GPIO1B_DS_3			0x21c
 #define GRF_GPIO1C_DS_0			0x220
 #define GRF_GPIO1C_DS_1			0x224
 #define GRF_GPIO1C_DS_2			0x228
 #define GRF_GPIO1C_DS_3			0x22c
-#define SGRF_BASE			0xFDD18000
+#define GRF_GPIO1D_DS_0			0x230
+#define GRF_GPIO1D_DS_1			0x234
+#define GRF_GPIO1D_DS_2			0x238
+#define SGRF_BASE			0xfdd18000
+#define SGRF_SOC_CON3			0x0c
 #define SGRF_SOC_CON4			0x10
 #define EMMC_HPROT_SECURE_CTRL		0x03
 #define SDMMC0_HPROT_SECURE_CTRL	0x01
@@ -133,6 +144,24 @@ int arch_cpu_init(void)
 	writel(0x3f3f0707, GRF_BASE + GRF_GPIO1C_DS_1);
 	writel(0x3f3f0707, GRF_BASE + GRF_GPIO1C_DS_2);
 	writel(0x3f3f0707, GRF_BASE + GRF_GPIO1C_DS_3);
+
+	/* emmc, sfc, and sdmmc iomux */
+	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO1B_IOMUX_H);
+	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO1C_IOMUX_L);
+	writel((0x7777UL << 16) | (0x2111), GRF_BASE + GRF_GPIO1C_IOMUX_H);
+	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO1D_IOMUX_L);
+	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO1D_IOMUX_H);
+	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO2A_IOMUX_L);
+
+	/* set the fspi d0~3 cs0 to level 2 */
+	writel(0x3f000700, GRF_BASE + GRF_GPIO1C_DS_3);
+	writel(0x3f000700, GRF_BASE + GRF_GPIO1D_DS_0);
+	writel(0x3f3f0707, GRF_BASE + GRF_GPIO1D_DS_1);
+	writel(0x003f0007, GRF_BASE + GRF_GPIO1D_DS_2);
+
+	/* Set the fspi to secure */
+	writel(((0x1 << 14) << 16) | (0x0 << 14), SGRF_BASE + SGRF_SOC_CON3);
+
 #endif
 	return 0;
 }
@@ -163,4 +192,27 @@ int ft_system_setup(void *blob, struct bd_info *bd)
 
 	return 0;
 };
+#endif
+
+#ifdef CONFIG_SPL_BUILD
+
+void __weak led_setup(void)
+{
+}
+
+void spl_board_init(void)
+{
+	led_setup();
+
+#if defined(SPL_DM_REGULATOR)
+	/*
+	 * Turning the eMMC and SPI back on (if disabled via the Qseven
+	 * BIOS_ENABLE) signal is done through a always-on regulator).
+	 */
+	if (regulators_enable_boot_on(false))
+		debug("%s: Cannot enable boot on regulator\n", __func__);
+#endif
+
+	setup_boot_mode();
+}
 #endif
