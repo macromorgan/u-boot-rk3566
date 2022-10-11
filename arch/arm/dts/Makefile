@@ -164,7 +164,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3399) += \
 	rk3399pro-rock-pi-n10.dtb
 
 dtb-$(CONFIG_ROCKCHIP_RK3568) += \
-	rk3568-evb.dtb
+	rk3568-evb1-v10.dtb
 
 dtb-$(CONFIG_ROCKCHIP_RV1108) += \
 	rv1108-elgin-r1.dtb \
