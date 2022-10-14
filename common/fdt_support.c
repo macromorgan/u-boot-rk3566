@@ -307,6 +307,17 @@ int fdt_chosen(void *fdt)
 		}
 	}
 
+	if (IS_ENABLED(CONFIG_BOARD_KASLR_SEED) && !board_rng_seed(&buf)) {
+		err = fdt_setprop(fdt, nodeoffset, "kaslr-seed",
+				  abuf_data(&buf), abuf_size(&buf));
+		abuf_uninit(&buf);
+		if (err < 0) {
+			printf("WARNING: could not set kaslr-seed %s.\n",
+			       fdt_strerror(err));
+			return err;
+		}
+	}
+
 	str = board_fdt_chosen_bootargs();
 
 	if (str) {

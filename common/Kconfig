@@ -782,6 +782,14 @@ config BOARD_RNG_SEED
 	  new seed for use on subsequent boots, and whether or not the
 	  kernel should account any entropy from the given seed.
 
+config BOARD_KASLR_SEED
+	depends on BOARD_RNG_SEED
+	bool "Provide /chosen/kaslr-seed property to the linux kernel"
+	help
+	  Use the same function as BOARD_RNG_SEED to also seed the
+	  linux kernel with a kaslr seed. This will make a second call
+	  to gather random data from the board_rng_seed() function.
+
 endmenu
 
 menu "Update support"
