@@ -20,11 +20,19 @@
 		mkimage {
 			filename = "idbloader.img";
 			args = "-n", CONFIG_SYS_SOC, "-T", "rksd";
-#ifdef CONFIG_TPL
+#if defined(CONFIG_TPL) || defined(CONFIG_ROCKCHIP_RK3568)
 			multiple-data-files;
+#if defined(CONFIG_ROCKCHIP_RK3568)
+
+			ram-fw {
+				filename = "ram_init.bin";
+				type = "blob-ext";
+			};
+#else
 
 			u-boot-tpl {
 			};
+#endif
 #endif
 			u-boot-spl {
 			};
