@@ -30,6 +30,9 @@
 #define GRF_GPIO1D_DS_0			0x230
 #define GRF_GPIO1D_DS_1			0x234
 #define GRF_GPIO1D_DS_2			0x238
+#define GRF_GPIO1D_DS_3			0x23c
+#define GRF_GPIO2A_DS_0			0x240
+#define GRF_GPIO2A_DS_1			0x244
 #define SGRF_BASE			0xfdd18000
 #define SGRF_SOC_CON3			0x0c
 #define SGRF_SOC_CON4			0x10
@@ -152,11 +155,14 @@ int arch_cpu_init(void)
 	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO1D_IOMUX_H);
 	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO2A_IOMUX_L);
 
-	/* set the fspi d0~3 cs0 to level 2 */
+	/* set the fspi d0~3 cs0 and mmc0 to level 2 */
 	writel(0x3f000700, GRF_BASE + GRF_GPIO1C_DS_3);
 	writel(0x3f000700, GRF_BASE + GRF_GPIO1D_DS_0);
 	writel(0x3f3f0707, GRF_BASE + GRF_GPIO1D_DS_1);
-	writel(0x003f0007, GRF_BASE + GRF_GPIO1D_DS_2);
+	writel(0x3f3f0707, GRF_BASE + GRF_GPIO1D_DS_2);
+	writel(0x3f3f0707, GRF_BASE + GRF_GPIO1D_DS_3);
+	writel(0x3f3f0707, GRF_BASE + GRF_GPIO2A_DS_0);
+	writel(0x003f0007, GRF_BASE + GRF_GPIO2A_DS_1);
 
 	/* Set the fspi to secure */
 	writel(((0x1 << 14) << 16) | (0x0 << 14), SGRF_BASE + SGRF_SOC_CON3);
