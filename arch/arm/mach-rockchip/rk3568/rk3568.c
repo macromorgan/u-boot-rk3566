@@ -184,6 +184,8 @@ void spl_board_init(void)
 		debug("%s: Cannot enable boot on regulator\n", __func__);
 #endif
 
+#if defined(CONFIG_SPL_ADC)
 	setup_boot_mode();
+#endif
 }
 #endif
