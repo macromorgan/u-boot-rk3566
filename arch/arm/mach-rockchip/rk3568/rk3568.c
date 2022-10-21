@@ -12,8 +12,12 @@
 #include <asm/arch-rockchip/grf_rk3568.h>
 #include <asm/arch-rockchip/hardware.h>
 #include <dt-bindings/clock/rk3568-cru.h>
+#include <power/regulator.h>
 
 #define PMUGRF_BASE			0xfdc20000
+#define PMUGRF_GPIO0A_IOMUX_H		0x04
+#define PMUGRF_GPIO0A_P			0x20
+#define PMUGRF_GPIO0A_DS_2		0x78
 #define GRF_BASE			0xfdc60000
 #define GRF_GPIO1B_IOMUX_H		0x0c
 #define GRF_GPIO1C_IOMUX_L		0x10
@@ -21,6 +25,8 @@
 #define GRF_GPIO1D_IOMUX_L		0x18
 #define GRF_GPIO1D_IOMUX_H		0x1c
 #define GRF_GPIO2A_IOMUX_L		0x20
+#define GRF_GPIO1D_P			0x8c
+#define GRF_GPIO2A_P			0x90
 #define GRF_GPIO1B_DS_2			0x218
 #define GRF_GPIO1B_DS_3			0x21c
 #define GRF_GPIO1C_DS_0			0x220
@@ -154,6 +160,7 @@ int arch_cpu_init(void)
 	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO1D_IOMUX_L);
 	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO1D_IOMUX_H);
 	writel((0x7777UL << 16) | (0x1111), GRF_BASE + GRF_GPIO2A_IOMUX_L);
+	writel((0x0077UL << 16) | (0x0011), PMUGRF_BASE + PMUGRF_GPIO0A_IOMUX_H);
 
 	/* set the fspi d0~3 cs0 and mmc0 to level 2 */
 	writel(0x3f000700, GRF_BASE + GRF_GPIO1C_DS_3);
@@ -163,6 +170,16 @@ int arch_cpu_init(void)
 	writel(0x3f3f0707, GRF_BASE + GRF_GPIO1D_DS_3);
 	writel(0x3f3f0707, GRF_BASE + GRF_GPIO2A_DS_0);
 	writel(0x003f0007, GRF_BASE + GRF_GPIO2A_DS_1);
+
+	/* set pull up for d0~3, cmd and clk mmc0 */
+	writel(0xfc005400, GRF_BASE + GRF_GPIO1D_P);
+	writel(0x003f0015, GRF_BASE + GRF_GPIO2A_P);
+
+	/* set pull up for mmc0 det, pull none for mmc0 pwren */
+	writel(0x0f000100, PMUGRF_BASE + PMUGRF_GPIO0A_P);
+
+	/* set mmc0 det and pwren to drive strength disabled */
+	writel(0x3f3f0000, PMUGRF_BASE + PMUGRF_GPIO0A_DS_2);
 
 	/* Set the fspi to secure */
 	writel(((0x1 << 14) << 16) | (0x0 << 14), SGRF_BASE + SGRF_SOC_CON3);
