@@ -181,7 +181,7 @@ void spl_board_init(void)
 {
 	led_setup();
 
-#if defined(SPL_DM_REGULATOR)
+#if defined(CONFIG_SPL_DM_REGULATOR)
 	/*
 	 * Turning the eMMC and SPI back on (if disabled via the Qseven
 	 * BIOS_ENABLE) signal is done through a always-on regulator).
