@@ -9,11 +9,12 @@
 	aliases {
 		mmc0 = &sdmmc0;
 		mmc1 = &sdmmc1;
+		mmc2 = &sdmmc2;
 	};
 
 	chosen {
 		stdout-path = &uart2;
-		u-boot,spl-boot-order = "same-as-spl", &sdmmc0;
+		u-boot,spl-boot-order = "same-as-spl", &sdmmc0, &sdmmc1;
 	};
 
 	rng: rng@fe388000 {
@@ -66,10 +67,6 @@
         /delete-property/ assigned-clock-parents;
         /delete-property/ clocks;
         /delete-property/ clock-names;
-};
-
-&sdmmc0 {
-	u-boot,spl-fifo-mode;
 };
 
 &uart2 {
