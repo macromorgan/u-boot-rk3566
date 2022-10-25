@@ -9,6 +9,11 @@ config TARGET_EVB_RK3568
 	help
 	  RK3568 EVB is a evaluation board for Rockchp RK3568.
 
+config TARGET_ANBERNIC_RG353P_RK3566
+	bool "Anbernic RG353P"
+	help
+	  Anbernic RG353P gaming device with Rockchip RK3566.
+
 config TARGET_ANBERNIC_RG503_RK3566
 	bool "Anbernic RG503"
 	help
@@ -29,6 +34,7 @@ config SYS_MALLOC_F_LEN
 	default 0x2000
 
 source "board/rockchip/evb_rk3568/Kconfig"
+source "board/anbernic/rg353p-rk3566/Kconfig"
 source "board/anbernic/rg503-rk3566/Kconfig"
 
 endif
