@@ -1,3 +1,8 @@
+As of this commit here U-Boot mainline now supports the Anbernic devices fully.
+https://github.com/u-boot/u-boot/commit/ff27afedff95f25bcd3c3ce90a4f35ea16b37e55
+
+Please do not use this fork any longer is it is not supported.
+
 # SPDX-License-Identifier: GPL-2.0+
 #
 # (C) Copyright 2000 - 2013
